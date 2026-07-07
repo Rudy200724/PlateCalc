@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 from nutrition_db import USDA_MAPPING
 
-DEBUG=True
+DEBUG=False
 
 load_dotenv()
 
