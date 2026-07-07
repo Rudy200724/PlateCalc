@@ -1,5 +1,10 @@
 # 🍽️ PlateCalc
 
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![YOLOv8](https://img.shields.io/badge/YOLOv8-Segmentation-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 > AI-powered food calorie estimation from a single food image using YOLOv8 Segmentation, OpenCV, and the USDA FoodData Central API.
 
 ---
@@ -13,6 +18,32 @@ The project combines deep learning, image processing, and external nutritional d
 The complete pipeline consists of:
 
 Image → Food Segmentation → Portion Estimation → Nutrition Lookup → Calorie Calculation
+
+## 📸 Demo
+
+### 1. Home Screen
+
+Upload a food image through the Streamlit interface to begin the analysis.
+
+<p align="center">
+<img src="images/dashboard.png" width="900">
+</p>
+
+### 2. Food Detection
+
+The trained YOLOv8 segmentation model detects multiple food items, predicts segmentation masks, and labels each object with its confidence score.
+
+<p align="center">
+<img src="images/detection.png" width="900">
+</p>
+
+### 3. Nutrition Dashboard
+
+The application estimates food weights, calculates approximate calories using USDA FoodData Central, and visualizes the results through tables and charts.
+
+<p align="center">
+<img src="images/nutritional_values.png" width="900">
+</p>
 
 ---
 
@@ -40,6 +71,7 @@ Image → Food Segmentation → Portion Estimation → Nutrition Lookup → Calo
 - Pandas
 - Streamlit
 - USDA FoodData Central API
+- Google Colab (GPU model training)
 
 ---
 
@@ -61,7 +93,7 @@ The segmentation masks were converted into the YOLOv8 segmentation format by:
 
 ## 2. Model Training
 
-A custom YOLOv8 Segmentation model was trained on the processed dataset.
+The YOLOv8 segmentation model was trained on the FoodSeg103 dataset using **Google Colab** with GPU acceleration. The trained weights (`best.pt`) obtained from this training are included in this repository for inference.
 
 The trained model predicts:
 
@@ -156,8 +188,28 @@ The application provides an interactive web interface where users can
 - visualize calorie and food-area distributions
 
 ---
+## 🚧 Challenges Faced
 
-# 📂 Project Structure
+### Dataset Conversion
+
+FoodSeg103 provides semantic segmentation masks whereas YOLOv8 expects polygon annotations. A preprocessing pipeline was implemented using OpenCV contour extraction to convert masks into YOLO-compatible segmentation labels.
+
+### Portion Estimation
+
+Estimating food weight from a single RGB image is inherently difficult because depth information is unavailable. To address this limitation, two heuristic approaches were implemented:
+- Connected Component Analysis for countable foods.
+- Mask-area based estimation for region-based foods.
+
+### USDA API Matching
+
+Food names in FoodSeg103 often differed from USDA FoodData entries. A mapping layer and preference for raw food entries were introduced to improve nutritional lookup accuracy.
+
+### Streamlit Integration
+
+The inference pipeline was separated from the UI, allowing the Streamlit frontend to remain modular and reusable.
+
+---
+# 📂 Repository Structure
 
 ```
 PlateCalc/
@@ -315,6 +367,15 @@ This project helped me understand several important concepts in computer vision 
 - Using Git and GitHub for version control
 
 ---
+## 📚 References
+
+- FoodSeg103 Dataset: https://xiongweiwu.github.io/foodseg103.html
+- Ultralytics YOLOv8 Documentation: https://docs.ultralytics.com/
+- USDA FoodData Central API: https://fdc.nal.usda.gov/api-guide
+- OpenCV Documentation: https://docs.opencv.org/
+- Streamlit Documentation: https://docs.streamlit.io/
+
+---
 
 # 🙏 Acknowledgements
 
@@ -322,7 +383,6 @@ This project helped me understand several important concepts in computer vision 
 - Ultralytics YOLOv8
 - FoodSeg103 Dataset
 - USDA FoodData Central API
-
 ---
 
 ## 👨‍💻 Author
